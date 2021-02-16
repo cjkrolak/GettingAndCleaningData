@@ -25,6 +25,18 @@ Q3Match <- function() {
     mergedData <- merge(gdp, edu, by.x="X", by.y="CountryCode", all=FALSE)
     mergedData <- mutate(mergedData, rank=as.numeric(Gross.domestic.product.2012))  # rank numeric column
     mergedData <- arrange(mergedData[!is.na(mergedData$rank),], desc(rank))  # remove NA and sort desc
+    
+    # question 3
     print(paste("number of matches=", length(mergedData$rank)))
-    result <- mergedData[13, "Short.Name"]
+    print(paste("13th lowest gdp=",mergedData[13, "Short.Name"]))
+    
+    # question 4
+    tapply(mergedData$rank, mergedData$Income.Group, mean, na.rm=TRUE)
+    
+    # question 5
+    mergedData$rankquartile <- cut(mergedData$rank, breaks=quantile(mergedData$rank,
+                                                                    probs = seq(0, 1, 1/5),
+                                                                    na.rm=TRUE), na.rm=TRUE)
+    table(mergedData$Income.Group, mergedData$rankquartile)
+    mergedData
 }
